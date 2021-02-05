@@ -1,0 +1,13 @@
+name: AprilFoolsDay
+version: 1.0
+main: com.popupmc.aprilfoolsday.AprilFoolsDay
+description: AprilFoolsDay
+author: junebug12851
+api-version: 1.15
+depend:
+  - ProtocolLib
+
+commands:
+  afd-spawn:
+    description: AprilFoolsDay Spawn (A debugging command for expiremental functionality)
+    usage: /afd-spawn
