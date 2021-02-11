@@ -3,7 +3,10 @@ package com.popupmc.aprilfoolsday;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.popupmc.aprilfoolsday.commands.FakePlayer;
+import com.popupmc.aprilfoolsday.commands.Toggle;
+import com.popupmc.aprilfoolsday.events.OnPlayerJoinEvent;
 import com.popupmc.aprilfoolsday.packets.*;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
@@ -13,14 +16,15 @@ public class AprilFoolsDay extends JavaPlugin {
     public void onEnable() {
 
         // Setup event listeners
-
-        // Total failure until I can find someone to help me
-        //Bukkit.getPluginManager().registerEvents(new OnPlayerJoinEvent(), this);
+        Bukkit.getPluginManager().registerEvents(new OnPlayerJoinEvent(this), this);
 
         // Setup Command Code
         // Debug command to spawn fake herobrine player
         // doesnt work though, trying to work with people to figure out why
-        Objects.requireNonNull(this.getCommand("afd-spawn")).setExecutor(new FakePlayer());
+        //Objects.requireNonNull(this.getCommand("afd-spawn")).setExecutor(new FakePlayer());
+
+        // Allow user to toggle joke
+        Objects.requireNonNull(this.getCommand("toggle-joke")).setExecutor(new Toggle());
 
         // Grab Protocol Manager
         ProtocolManager manager = ProtocolLibrary.getProtocolManager();

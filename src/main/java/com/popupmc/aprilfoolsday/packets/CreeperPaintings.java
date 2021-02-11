@@ -4,6 +4,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.popupmc.aprilfoolsday.AprilFoolsDay;
+import com.popupmc.aprilfoolsday.commands.Toggle;
 
 public class CreeperPaintings extends PacketAdapter {
     public CreeperPaintings(AprilFoolsDay plugin) {
@@ -12,6 +13,10 @@ public class CreeperPaintings extends PacketAdapter {
 
     @Override
     public void onPacketSending(PacketEvent event) {
+        // If disabled for this player do nothing, stop here
+        if(!Toggle.getStatus(event.getPlayer()))
+            return;
+
         // Change Painting ID to creeper
         event.getPacket().getIntegers().write(1, 11);
     }

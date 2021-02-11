@@ -5,6 +5,7 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.popupmc.aprilfoolsday.AprilFoolsDay;
+import com.popupmc.aprilfoolsday.commands.Toggle;
 
 public class ReverseBlockBreak extends PacketAdapter {
     public ReverseBlockBreak(AprilFoolsDay plugin) {
@@ -14,14 +15,16 @@ public class ReverseBlockBreak extends PacketAdapter {
     @Override
     public void onPacketSending(PacketEvent event) {
 
+        // If disabled for this player do nothing, stop here
+        if(!Toggle.getStatus(event.getPlayer()))
+            return;
+
         // Get Packet
         PacketContainer packet = event.getPacket();
 
         // Get Break Progress
         // It's between 0-9, numbers outside the range result in progress reset
         int progress = packet.getIntegers().read(1);
-
-        System.out.println("Progress " + progress);
 
         // Stop here if numbers outside range
         if(progress < 0 || progress > 9)

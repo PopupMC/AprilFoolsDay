@@ -4,6 +4,9 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
+import com.popupmc.aprilfoolsday.AprilFoolsDay;
+import com.popupmc.aprilfoolsday.commands.Toggle;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -11,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
@@ -18,23 +22,53 @@ import java.util.UUID;
 // I have no idea, yet another thing where theres no help online and I cant figure it out, this is a failure
 // Until I can find someone to help me
 public class OnPlayerJoinEvent implements Listener {
+    public OnPlayerJoinEvent(AprilFoolsDay plugin) {
+        this.plugin = plugin;
+    }
+
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
 
         // Get Player
         Player p = e.getPlayer();
 
-        // Get Protocol Manager
-        manager = ProtocolLibrary.getProtocolManager();
+        // Get enabled status
+        String status = (Toggle.getStatus(p)) ? "enabled" : "disabled";
+        status = ChatColor.YELLOW + status;
 
-        // 1st spawn fake creeper to ensure the client has a creeper loaded
-        LivingEntity creeper = spawnFakeCreeperAttempt2(p);
+        final String status2 = status;
 
-        // 2nd switch game mode to spectator
-        switchGamemode(p, 3f);
+        // Send resource pack only if player has April Fools Enabled
+        // sha1sum <file> used to properly calculate hash on Linux
+        if(Toggle.getStatus(p)) {
+            p.setResourcePack("https://www.dropbox.com/s/8fe5x31uvyzul88/MS%2BPainted%2B1.19.zip?dl=1", "73891393d9e34273c2f75cae304ee2718adb2b77");
+        }
 
-        // 3rd switch camera shader
-        changeCameraShader(p, creeper.getEntityId());
+        // Announce to player after 1 second
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+
+                // Only if player is still valid
+                if(!p.isValid())
+                    return;
+
+                p.sendMessage(ChatColor.GOLD + "April Fools Day is " + status2 + ChatColor.GOLD + " for you. Toggle with " +
+                        ChatColor.YELLOW + "/toggle-joke");
+            }
+        }.runTaskLater(plugin, 20);
+
+//        // Get Protocol Manager
+//        manager = ProtocolLibrary.getProtocolManager();
+//
+//        // 1st spawn fake creeper to ensure the client has a creeper loaded
+//        LivingEntity creeper = spawnFakeCreeperAttempt2(p);
+//
+//        // 2nd switch game mode to spectator
+//        switchGamemode(p, 3f);
+//
+//        // 3rd switch camera shader
+//        changeCameraShader(p, creeper.getEntityId());
     }
 
     public void spawnFakeCreeper(Player p) {
@@ -117,4 +151,5 @@ public class OnPlayerJoinEvent implements Listener {
     }
 
     public ProtocolManager manager;
+    public AprilFoolsDay plugin;
 }
