@@ -5,7 +5,7 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.popupmc.aprilfoolsday.AprilFoolsDay;
-import com.popupmc.aprilfoolsday.commands.Toggle;
+import com.popupmc.aprilfoolsday.commands.OnToggleJokeCommand;
 import org.bukkit.entity.Player;
 
 public class SingleAnimation extends PacketAdapter {
@@ -19,7 +19,7 @@ public class SingleAnimation extends PacketAdapter {
         Player player = event.getPlayer();
 
         // If disabled for this player do nothing, stop here
-        if(!Toggle.getStatus(player))
+        if(!OnToggleJokeCommand.getStatus(player))
             return;
 
         // Exclude the player by comparing entity ids

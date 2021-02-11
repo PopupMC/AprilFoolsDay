@@ -1,11 +1,10 @@
 package com.popupmc.aprilfoolsday.events;
 
 import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.popupmc.aprilfoolsday.AprilFoolsDay;
-import com.popupmc.aprilfoolsday.commands.Toggle;
+import com.popupmc.aprilfoolsday.commands.OnToggleJokeCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
@@ -33,14 +32,14 @@ public class OnPlayerJoinEvent implements Listener {
         Player p = e.getPlayer();
 
         // Get enabled status
-        String status = (Toggle.getStatus(p)) ? "enabled" : "disabled";
+        String status = (OnToggleJokeCommand.getStatus(p)) ? "enabled" : "disabled";
         status = ChatColor.YELLOW + status;
 
         final String status2 = status;
 
         // Send resource pack only if player has April Fools Enabled
         // sha1sum <file> used to properly calculate hash on Linux
-        if(Toggle.getStatus(p)) {
+        if(OnToggleJokeCommand.getStatus(p)) {
             p.setResourcePack("https://www.dropbox.com/s/8fe5x31uvyzul88/MS%2BPainted%2B1.19.zip?dl=1", "73891393d9e34273c2f75cae304ee2718adb2b77");
         }
 

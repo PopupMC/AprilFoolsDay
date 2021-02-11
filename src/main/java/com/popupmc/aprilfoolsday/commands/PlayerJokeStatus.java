@@ -1,6 +1,6 @@
 package com.popupmc.aprilfoolsday.commands;
 
-public enum ToggleStatus {
+public enum PlayerJokeStatus {
     ENABLED,
     DISABLED,
     DEFAULT

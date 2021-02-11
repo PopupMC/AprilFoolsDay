@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
-public class Toggle implements CommandExecutor {
+public class OnToggleJokeCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player))
             return onConsoleCommand(sender, args);
@@ -23,9 +23,9 @@ public class Toggle implements CommandExecutor {
             return toogleOthers(sender, args[0]);
         }
 
-        ToggleStatus val = tooglePlayer(sender);
+        PlayerJokeStatus val = tooglePlayer(sender);
 
-        if(val == ToggleStatus.ENABLED) {
+        if(val == PlayerJokeStatus.ENABLED) {
             sender.kickPlayer("April Fools Day has been enabled for you, please " +
                     "re-login.");
         }
@@ -60,8 +60,8 @@ public class Toggle implements CommandExecutor {
             return false;
         }
         else {
-            ToggleStatus val = tooglePlayer(targPlayer);
-            if(val == ToggleStatus.ENABLED) {
+            PlayerJokeStatus val = tooglePlayer(targPlayer);
+            if(val == PlayerJokeStatus.ENABLED) {
                 sender.sendMessage(ChatColor.GOLD + "AFD has been enabled for " + targPlayerName);
                 targPlayer.kickPlayer("April Fools Day has been enabled for you by " + sender.getName() + ", please " +
                         "re-login.");
@@ -76,7 +76,7 @@ public class Toggle implements CommandExecutor {
         }
     }
 
-    public static ToggleStatus tooglePlayer(Player player) {
+    public static PlayerJokeStatus tooglePlayer(Player player) {
         // Get UUID String of player
         String UUID = player.getUniqueId().toString();
 
@@ -87,18 +87,18 @@ public class Toggle implements CommandExecutor {
         players.put(UUID, !val);
 
         // Return opposite value
-        return (val) ? ToggleStatus.DISABLED : ToggleStatus.ENABLED;
+        return (val) ? PlayerJokeStatus.DISABLED : PlayerJokeStatus.ENABLED;
     }
 
     // Return player status
-    public static ToggleStatus getStatus(String UUID) {
+    public static PlayerJokeStatus getStatus(String UUID) {
 
         // If doesn't exist then return default value
         if(!players.containsKey(UUID))
-            return ToggleStatus.DEFAULT;
+            return PlayerJokeStatus.DEFAULT;
 
         // Otherwise return enabled or disabled
-        return (players.getOrDefault(UUID, false)) ? ToggleStatus.ENABLED : ToggleStatus.DISABLED;
+        return (players.getOrDefault(UUID, false)) ? PlayerJokeStatus.ENABLED : PlayerJokeStatus.DISABLED;
     }
 
     // If a player is provided then we perform a more intelligent check
@@ -108,19 +108,22 @@ public class Toggle implements CommandExecutor {
         String UUID = player.getUniqueId().toString();
 
         // Get stored value
-        ToggleStatus val = getStatus(UUID);
+        PlayerJokeStatus val = getStatus(UUID);
 
         // If default then we calculate a sufficient value
-        if(val == ToggleStatus.DEFAULT) {
+        if(val == PlayerJokeStatus.DEFAULT && !devMode) {
             // If not op and not bypass permission then enabled by default, otherwise disabled
             if(!player.isOp() && !player.hasPermission("afd.bypass"))
                 val = defStatusForRegPlayers;
             else
-                val = ToggleStatus.DISABLED;
+                val = PlayerJokeStatus.DISABLED;
+        }
+        else if(val == PlayerJokeStatus.DEFAULT && devMode) {
+            val = PlayerJokeStatus.ENABLED;
         }
 
         // Return true if enabled, false otherwise
-        return val == ToggleStatus.ENABLED;
+        return val == PlayerJokeStatus.ENABLED;
     }
 
     // Associates a player UUID to a boolean indicating enabled status
@@ -129,5 +132,8 @@ public class Toggle implements CommandExecutor {
     public static HashMap<String, Boolean> players = new HashMap<>();
 
     // Set this to disabled when outside April Fools Day to have it entirely disabled by default
-    public static final ToggleStatus defStatusForRegPlayers = ToggleStatus.ENABLED;
+    public static final PlayerJokeStatus defStatusForRegPlayers = PlayerJokeStatus.ENABLED;
+
+    // If this is enabled, the joke is enabled by default to all people, not just regular players
+    public static final boolean devMode = true;
 }

@@ -2,8 +2,7 @@ package com.popupmc.aprilfoolsday;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.popupmc.aprilfoolsday.commands.FakePlayer;
-import com.popupmc.aprilfoolsday.commands.Toggle;
+import com.popupmc.aprilfoolsday.commands.OnToggleJokeCommand;
 import com.popupmc.aprilfoolsday.events.OnPlayerJoinEvent;
 import com.popupmc.aprilfoolsday.packets.*;
 import org.bukkit.Bukkit;
@@ -21,10 +20,10 @@ public class AprilFoolsDay extends JavaPlugin {
         // Setup Command Code
         // Debug command to spawn fake herobrine player
         // doesnt work though, trying to work with people to figure out why
-        //Objects.requireNonNull(this.getCommand("afd-spawn")).setExecutor(new FakePlayer());
+        //Objects.requireNonNull(this.getCommand("afd-spawn")).setExecutor(new OnFakePlayerCommand());
 
         // Allow user to toggle joke
-        Objects.requireNonNull(this.getCommand("toggle-joke")).setExecutor(new Toggle());
+        Objects.requireNonNull(this.getCommand("toggle-joke")).setExecutor(new OnToggleJokeCommand());
 
         // Grab Protocol Manager
         ProtocolManager manager = ProtocolLibrary.getProtocolManager();
@@ -66,6 +65,10 @@ public class AprilFoolsDay extends JavaPlugin {
         // Block breaking progress is reversed
         // This doesnt seem to be called
         manager.addPacketListener(new ReverseBlockBreak(this));
+
+        // Muck around with block data sent to clients
+        // No Human on earth can figure this bull@!##! out
+        // manager.addPacketListener(new CartoonyBlocks(this));
 
         // Log enabled status
         getLogger().info("AprilFoolsDay is enabled.");

@@ -12,5 +12,5 @@ commands:
     description: AprilFoolsDay Spawn (A debugging command for expiremental functionality)
     usage: /afd-spawn
   toggle-joke:
-    description: Toggle April Fools Day Joke
+    description: OnToggleJokeCommand April Fools Day Joke
     usage: /toggle-joke
